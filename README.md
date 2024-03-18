@@ -1,3 +1,3 @@
-# MemesAPIFrontend
+# MemeGeneratorFrontend
 
-Vue 练习项目
+Vue 练手项目，不会积极维护
