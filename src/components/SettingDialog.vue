@@ -49,8 +49,7 @@ const settingsInForm = reactive({ ...model.value.settings })
 
 onMounted(() => {
   const storedBackendBaseURL = localStorage.getItem('backendBaseURL')
-  if (storedBackendBaseURL)
-    model.value.settings.backendBaseURL = storedBackendBaseURL
+  if (storedBackendBaseURL) model.value.settings.backendBaseURL = storedBackendBaseURL
 })
 
 watch(model.value.settings, (v) => {

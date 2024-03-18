@@ -2,24 +2,32 @@
   <div class="flex flex-col md:flex-row gap-20px">
     <div class="flex flex-col gap-20px">
       <MemeSelector v-model="selected" :settings="settings" />
-      <ElImage
-        v-if="preview"
-        class="h-48 w-100% md:h-auto md:w-64 xl:w-96"
-        :src="preview"
-        fit="contain"
-        :preview-src-list="[preview]"
-      />
+      <div v-if="preview">
+        <ElImage
+          class="h-48 w-100% md:h-auto md:w-64 xl:w-96"
+          :src="preview"
+          fit="contain"
+          :preview-src-list="[preview]"
+        />
+        <p class="m-0 p-0 text-center">
+          <ElLink type="info" @click="savePicture">
+            <span class="i-carbon-download"></span> Save Picture
+          </ElLink>
+        </p>
+      </div>
       <div
         v-else
         class="flex justify-center items-center bg-[var(--el-fill-color)] h-48 w-48 m-auto md:h-64 md:w-64 md:m-0 xl:h-96 xl:w-96 rounded-md overflow-hidden"
       >
-        <ElEmpty description=" " style="padding: 0px !important"></ElEmpty>
+        <span
+          v-if="info"
+          class="i-carbon-document-unknown text-[var(--el-text-color-secondary)] text-4xl"
+        ></span>
+        <ElEmpty v-else description=" " style="padding: 0px !important"></ElEmpty>
       </div>
     </div>
-    <pre v-if="info">{{ JSON.stringify(info, null, 2) }}</pre>
-    <p v-else class="text-center text-[var(--el-text-color-secondary)] m-0">
-      No meme selected
-    </p>
+    <pre v-if="info" class="m-0">{{ JSON.stringify(info, null, 2) }}</pre>
+    <p v-else class="text-center text-[var(--el-text-color-secondary)] m-0">No meme selected</p>
   </div>
 </template>
 
@@ -58,18 +66,16 @@ const info = ref<MemeInfo | null>(null)
 const preview = ref<string | null>(null)
 
 async function getMemeInfo(key: string) {
-  const res = await fetch(
-    new URL(`/memes/${key}/info`, props.settings.backendBaseURL),
-    { method: 'GET' }
-  )
+  const res = await fetch(new URL(`/memes/${key}/info`, props.settings.backendBaseURL), {
+    method: 'GET',
+  })
   return await (res.json() as Promise<MemeInfo>)
 }
 
 async function getMemePreview(key: string) {
-  const res = await fetch(
-    new URL(`/memes/${key}/preview`, props.settings.backendBaseURL),
-    { method: 'GET' }
-  )
+  const res = await fetch(new URL(`/memes/${key}/preview`, props.settings.backendBaseURL), {
+    method: 'GET',
+  })
   return await res.blob()
 }
 
@@ -95,6 +101,15 @@ async function loadPreview() {
     ElMessage.error(`${e}`)
     console.error(e)
   }
+}
+
+function savePicture() {
+  if (!preview.value) return
+  const a = document.createElement('a')
+  a.href = preview.value
+  a.download = `${selected.value}_${Date.now()}.png`
+  a.click()
+  a.remove()
 }
 
 watch(info, () => {
