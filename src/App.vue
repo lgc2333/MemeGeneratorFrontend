@@ -7,16 +7,7 @@
     </ElHeader>
 
     <ElMain>
-      <MemeSelector
-        v-model="selectedMemeKey"
-        :settings="settings"
-      ></MemeSelector>
-      <p v-if="!selectedMemeKey" class="text-center color-gray font-size-sm">
-        No meme selected
-      </p>
-      <div v-else>
-        <p class="text-center">Selected {{ selectedMemeKey }}</p>
-      </div>
+      <MemeGenerateForm v-model="selectedMemeKey" :settings="settings" />
     </ElMain>
   </ElContainer>
 
