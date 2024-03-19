@@ -1,9 +1,14 @@
-/// <reference path="../auto-imports.d.ts" />
-/// <reference path="../components.d.ts" />
-
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'virtual:uno.css'
+
 import { createApp } from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+
 import App from './App.vue'
 
-createApp(App).mount('#app')
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [{ path: '/', component: () => import('./views/MainView.vue') }],
+})
+
+createApp(App).use(router).mount('#app')

@@ -1,15 +1,5 @@
 <template>
-  <el-dialog
-    v-model="model.visible"
-    title="Settings"
-    width="80%"
-    :before-close="
-      () => {
-        Object.assign(settingsInForm, model.settings)
-        model.visible = false
-      }
-    "
-  >
+  <el-dialog v-model="visible" title="Settings" width="80%">
     <el-form :model="settingsInForm">
       <el-form-item label="Backend Base URL">
         <el-input v-model="settingsInForm.backendBaseURL" />
@@ -17,43 +7,30 @@
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button
-          type="primary"
-          plain
-          @click="
-            () => {
-              Object.assign(model.settings, settingsInForm)
-              model.visible = false
-            }
-          "
-        >
-          Change
-        </el-button>
+        <el-button type="primary" plain @click="applyAndClose">Change</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, onMounted } from 'vue'
+import { reactive, watchEffect } from 'vue'
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus'
 
-const model = defineModel<{ settings: Settings; visible: boolean }>({
-  required: true,
-})
+import { settings } from '../utils/settings'
 
-export interface Settings {
-  backendBaseURL: string
+const visible = defineModel<boolean>({ required: true })
+
+const settingsInForm = reactive({ ...settings })
+
+function applyAndClose() {
+  Object.assign(settings, settingsInForm)
+  visible.value = false
 }
 
-const settingsInForm = reactive({ ...model.value.settings })
-
-onMounted(() => {
-  const storedBackendBaseURL = localStorage.getItem('backendBaseURL')
-  if (storedBackendBaseURL) model.value.settings.backendBaseURL = storedBackendBaseURL
-})
-
-watch(model.value.settings, (v) => {
-  Object.assign(settingsInForm, v)
-  localStorage.setItem('backendBaseURL', v.backendBaseURL)
+watchEffect(() => {
+  if (!visible.value) {
+    Object.assign(settingsInForm, settings)
+  }
 })
 </script>

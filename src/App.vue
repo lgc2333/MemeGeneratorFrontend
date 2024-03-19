@@ -7,24 +7,20 @@
     </el-header>
 
     <el-main>
-      <meme-generate-form v-model="selectedMemeKey" :settings="settings" />
+      <router-view class="m-auto w-100% md:w-70%" />
     </el-main>
   </el-container>
 
-  <setting-dialog v-model="settingsDialogModel"></setting-dialog>
+  <setting-dialog v-model="settingsVisible" />
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Settings } from './components/SettingDialog.vue'
+import { ElContainer, ElHeader, ElMain } from 'element-plus'
 
-const defaultSettings: Settings = {
-  backendBaseURL: 'http://localhost:23333',
-}
-const settings = reactive({ ...defaultSettings })
+import SiteHeader from './components/SiteHeader.vue'
+import SettingDialog from './components/SettingDialog.vue'
+
 const settingsVisible = ref<boolean>(false)
-const headerModel = ref({ settingsVisible })
-const settingsDialogModel = ref({ settings, visible: settingsVisible })
-
-const selectedMemeKey = ref('')
+const headerModel = reactive({ settingsVisible })
 </script>

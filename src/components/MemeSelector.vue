@@ -1,29 +1,31 @@
 <template>
   <el-select
+    v-model="selected"
     placeholder="Select a meme"
     filterable
     clearable
     remote
     :remote-method="fetchMemeList"
     :loading="loadingMemeList"
-    v-model="selected"
   >
-    <el-option v-for="x of activeMemeKeys" :value="x"></el-option>
+    <el-option v-for="x in activeMemeKeys" :key="x" :value="x" />
   </el-select>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { Settings } from './SettingDialog.vue'
+import { ElMessage, ElOption, ElSelect } from 'element-plus'
+
+import { settings } from '../utils/settings'
+import { backend } from '../utils/meme-api'
 
 const selected = defineModel<string>({ required: true })
-const props = defineProps<{ settings: Settings }>()
 
 const loadedMemeKeys = ref<string[]>([])
 const activeMemeKeys = ref<string[]>([])
 const loadingMemeList = ref(false)
 
-watch(props.settings, () => {
+watch(settings, () => {
   loadedMemeKeys.value = []
   activeMemeKeys.value = []
   selected.value = ''
@@ -36,9 +38,7 @@ async function fetchMemeList(query: string) {
     ls = loadedMemeKeys.value
   } else {
     try {
-      ls = await fetch(new URL('/memes/keys', props.settings.backendBaseURL), {
-        method: 'GET',
-      }).then((res) => res.json())
+      ls = await backend.value.getKeys()
       loadedMemeKeys.value = ls
     } catch (e) {
       console.error(e)
