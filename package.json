@@ -24,6 +24,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-vue": "^9.23.0",
     "prettier": "^3.2.5",
+    "sass": "^1.72.0",
     "typescript": "^5.2.2",
     "unocss": "^0.58.6",
     "unplugin-element-plus": "^0.8.0",

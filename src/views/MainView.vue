@@ -4,10 +4,14 @@
       <meme-selector v-model="selectedMemeKey" />
       <meme-preview :url="preview" :filename="selectedMemeKey" />
     </div>
-    <meme-params-form v-if="info" v-model="generateParams" :info="info" />
-    <el-text v-else class="text-center text-[var(--el-text-color-secondary)] m-0">
-      No meme selected
-    </el-text>
+    <meme-params-form
+      v-if="info"
+      v-model="generateParams"
+      class="w-100%"
+      :info="info"
+      :handle-generate="generate"
+    />
+    <el-text v-else type="info" class="text-center m-0"> No meme selected </el-text>
   </div>
 </template>
 
@@ -25,7 +29,13 @@ const selectedMemeKey = ref<string>('')
 const info = ref<MemeInfo | null>(null)
 const preview = ref<string | null>(null)
 
-const generateParams = ref<MemeGenerateParams>({})
+let lastPreviewLoadSignal = new AbortController()
+
+const generateParams = ref<MemeGenerateParams>({
+  images: [],
+  texts: [],
+  args: {},
+})
 
 async function loadInfo() {
   info.value = null
@@ -40,16 +50,31 @@ async function loadInfo() {
   loadingSv.close()
 }
 
-async function loadPreview() {
-  preview.value = null
-  const currentMeme = selectedMemeKey.value
+async function changePreview(callback: () => Promise<Blob>, setNull = true) {
+  lastPreviewLoadSignal.abort()
+  const abort = new AbortController()
+  lastPreviewLoadSignal = abort
+  if (setNull) preview.value = null
   try {
-    const blob = await backend.value.getPreview(selectedMemeKey.value)
-    if (currentMeme === selectedMemeKey.value) preview.value = URL.createObjectURL(blob)
+    const img = await callback()
+    if (!abort.signal.aborted) preview.value = URL.createObjectURL(img)
   } catch (e) {
     ElMessage.error(`${e}`)
     console.error(e)
   }
+}
+
+async function loadPreview() {
+  await changePreview(() => backend.value.getPreview(selectedMemeKey.value))
+}
+
+async function generate() {
+  const sv = ElLoading.service()
+  await changePreview(
+    () => backend.value.generate(selectedMemeKey.value, generateParams.value),
+    false
+  )
+  sv.close()
 }
 
 watch(info, () => {

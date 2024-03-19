@@ -1,7 +1,7 @@
 <template>
-  <div v-if="url">
+  <div v-if="url" class="mx-auto md:m-0">
     <el-image
-      class="h-48 w-100% md:h-auto md:w-64"
+      class="h-48 w-fit md:h-fit md:w-64"
       :src="url"
       fit="contain"
       :preview-src-list="[url]"
@@ -14,11 +14,11 @@
   </div>
   <div
     v-else
-    class="flex justify-center items-center bg-[var(--el-fill-color)] h-48 w-48 m-auto md:h-64 md:w-64 md:m-0 rounded-md overflow-hidden"
+    class="flex justify-center items-center bg-[--el-fill-color] h-48 w-48 m-auto md:h-64 md:w-64 md:m-0 rounded-md overflow-hidden"
   >
     <span
       v-if="filename"
-      class="i-carbon-document-unknown text-[var(--el-text-color-secondary)] text-4xl"
+      class="i-carbon-document-unknown text-[--el-text-color-secondary] text-4xl"
     ></span>
     <el-empty v-else description=" " style="padding: 0px !important"></el-empty>
   </div>

@@ -1,20 +1,19 @@
 <template>
-  <el-select
+  <el-select-v2
     v-model="selected"
     placeholder="Select a meme"
     filterable
     clearable
     remote
+    :options="activeMemeKeys.map((x) => ({ value: x, label: x }))"
     :remote-method="fetchMemeList"
     :loading="loadingMemeList"
-  >
-    <el-option v-for="x in activeMemeKeys" :key="x" :value="x" />
-  </el-select>
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { ElMessage, ElSelectV2 } from 'element-plus'
 
 import { settings } from '../utils/settings'
 import { backend } from '../utils/meme-api'
