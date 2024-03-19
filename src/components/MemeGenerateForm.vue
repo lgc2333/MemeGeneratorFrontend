@@ -1,18 +1,18 @@
 <template>
   <div class="flex flex-col md:flex-row gap-20px">
     <div class="flex flex-col gap-20px">
-      <MemeSelector v-model="selected" :settings="settings" />
+      <meme-selector v-model="selected" :settings="settings" />
       <div v-if="preview">
-        <ElImage
+        <el-image
           class="h-48 w-100% md:h-auto md:w-64 xl:w-96"
           :src="preview"
           fit="contain"
           :preview-src-list="[preview]"
         />
         <p class="m-0 p-0 text-center">
-          <ElLink type="info" @click="savePicture">
+          <el-link type="info" @click="savePicture">
             <span class="i-carbon-download"></span> Save Picture
-          </ElLink>
+          </el-link>
         </p>
       </div>
       <div
@@ -23,7 +23,7 @@
           v-if="info"
           class="i-carbon-document-unknown text-[var(--el-text-color-secondary)] text-4xl"
         ></span>
-        <ElEmpty v-else description=" " style="padding: 0px !important"></ElEmpty>
+        <el-empty v-else description=" " style="padding: 0px !important"></el-empty>
       </div>
     </div>
     <pre v-if="info" class="m-0">{{ JSON.stringify(info, null, 2) }}</pre>

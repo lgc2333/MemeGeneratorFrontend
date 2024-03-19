@@ -1,5 +1,5 @@
 <template>
-  <ElSelect
+  <el-select
     placeholder="Select a meme"
     filterable
     clearable
@@ -8,8 +8,8 @@
     :loading="loadingMemeList"
     v-model="selected"
   >
-    <ElOption v-for="x of activeMemeKeys" :value="x"></ElOption>
-  </ElSelect>
+    <el-option v-for="x of activeMemeKeys" :value="x"></el-option>
+  </el-select>
 </template>
 
 <script setup lang="ts">

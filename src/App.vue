@@ -1,17 +1,17 @@
 <template>
-  <ElContainer>
-    <ElHeader
+  <el-container>
+    <el-header
       class="flex items-center bg-[var(--el-color-primary-light-3)] text-[var(--el-text-color-primary)] shadow"
     >
-      <SiteHeader v-model="headerModel" />
-    </ElHeader>
+      <site-header v-model="headerModel" />
+    </el-header>
 
-    <ElMain>
-      <MemeGenerateForm v-model="selectedMemeKey" :settings="settings" />
-    </ElMain>
-  </ElContainer>
+    <el-main>
+      <meme-generate-form v-model="selectedMemeKey" :settings="settings" />
+    </el-main>
+  </el-container>
 
-  <SettingDialog v-model="settingsDialogModel"></SettingDialog>
+  <setting-dialog v-model="settingsDialogModel"></setting-dialog>
 </template>
 
 <script setup lang="ts">

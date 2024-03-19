@@ -1,5 +1,5 @@
 <template>
-  <ElDialog
+  <el-dialog
     v-model="model.visible"
     title="Settings"
     width="80%"
@@ -10,11 +10,11 @@
       }
     "
   >
-    <ElForm :model="settingsInForm">
-      <ElFormItem label="Backend Base URL">
-        <ElInput v-model="settingsInForm.backendBaseURL" />
-      </ElFormItem>
-    </ElForm>
+    <el-form :model="settingsInForm">
+      <el-form-item label="Backend Base URL">
+        <el-input v-model="settingsInForm.backendBaseURL" />
+      </el-form-item>
+    </el-form>
     <template #footer>
       <div class="dialog-footer">
         <el-button
@@ -31,7 +31,7 @@
         </el-button>
       </div>
     </template>
-  </ElDialog>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
