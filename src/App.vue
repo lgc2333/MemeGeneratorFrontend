@@ -3,14 +3,12 @@
     <el-header
       class="flex items-center bg-[var(--el-color-primary-light-3)] text-[var(--el-text-color-primary)] shadow"
     >
-      <site-header v-model="headerModel" />
+      <site-header v-model="headerModel" class="mx-auto max-w-4xl" />
     </el-header>
-
     <el-main>
-      <router-view class="m-auto w-100% md:w-70%" />
+      <router-view class="m-auto max-w-4xl" />
     </el-main>
   </el-container>
-
   <setting-dialog v-model="settingsVisible" />
 </template>
 

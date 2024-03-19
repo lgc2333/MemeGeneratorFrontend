@@ -4,23 +4,28 @@
       <meme-selector v-model="selectedMemeKey" />
       <meme-preview :url="preview" :filename="selectedMemeKey" />
     </div>
-    <pre v-if="info" class="m-0">{{ JSON.stringify(info, null, 2) }}</pre>
-    <p v-else class="text-center text-[var(--el-text-color-secondary)] m-0">No meme selected</p>
+    <meme-params-form v-if="info" v-model="generateParams" :info="info" />
+    <el-text v-else class="text-center text-[var(--el-text-color-secondary)] m-0">
+      No meme selected
+    </el-text>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { ElLoading, ElMessage } from 'element-plus'
+import { ElLoading, ElMessage, ElText } from 'element-plus'
 
 import MemeSelector from '../components/MemeSelector.vue'
 import MemePreview from '../components/MemePreview.vue'
-import { backend, MemeInfo } from '../utils/meme-api'
+import MemeParamsForm from '../components/MemeParamsForm.vue'
+import { backend, MemeGenerateParams, MemeInfo } from '../utils/meme-api'
 
 const selectedMemeKey = ref<string>('')
 
 const info = ref<MemeInfo | null>(null)
 const preview = ref<string | null>(null)
+
+const generateParams = ref<MemeGenerateParams>({})
 
 async function loadInfo() {
   info.value = null
@@ -37,9 +42,10 @@ async function loadInfo() {
 
 async function loadPreview() {
   preview.value = null
+  const currentMeme = selectedMemeKey.value
   try {
     const blob = await backend.value.getPreview(selectedMemeKey.value)
-    preview.value = URL.createObjectURL(blob)
+    if (currentMeme === selectedMemeKey.value) preview.value = URL.createObjectURL(blob)
   } catch (e) {
     ElMessage.error(`${e}`)
     console.error(e)

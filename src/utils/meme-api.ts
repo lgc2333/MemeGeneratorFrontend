@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+
 import { settings } from './settings'
 
 export interface MemeParamArg {
@@ -24,6 +25,8 @@ export interface MemeInfo {
   patterns: string[]
   params: MemeParams
 }
+
+export interface MemeGenerateParams {}
 
 export class MemeGeneratorAPI {
   constructor(public baseURL: string) {}
