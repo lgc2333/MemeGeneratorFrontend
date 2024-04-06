@@ -1,4 +1,4 @@
-import { UploadFile } from 'element-plus'
+import { UploadUserFile } from 'element-plus'
 import { computed } from 'vue'
 
 import { settings } from './settings'
@@ -28,7 +28,7 @@ export interface MemeInfo {
 }
 
 export interface MemeGenerateParams {
-  images: (UploadFile | null)[]
+  images: UploadUserFile[]
   texts: string[]
   args: Record<string, any>
 }
@@ -98,7 +98,7 @@ export class MemeGeneratorAPI {
       if (file) data.append('images', file.raw!)
     })
     params.texts.forEach((text) => {
-      data.append('texts', text)
+      if (text) data.append('texts', text)
     })
     if (params.args) data.append('args', JSON.stringify(params.args))
     const res = await this.fetch(`/memes/${key}/`, {

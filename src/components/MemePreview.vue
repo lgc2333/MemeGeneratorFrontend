@@ -13,19 +13,25 @@
     </p>
   </div>
   <div
+    v-else-if="filename"
+    class="h-48 w-48 m-auto md:h-64 md:w-64 md:m-0 rounded-md overflow-hidden"
+  >
+    <el-skeleton animated class="w-100% h-100%">
+      <template #template>
+        <el-skeleton-item variant="image" style="width: 100%; height: 100%" />
+      </template>
+    </el-skeleton>
+  </div>
+  <div
     v-else
     class="flex justify-center items-center bg-[--el-fill-color] h-48 w-48 m-auto md:h-64 md:w-64 md:m-0 rounded-md overflow-hidden"
   >
-    <span
-      v-if="filename"
-      class="i-carbon-document-unknown text-[--el-text-color-secondary] text-4xl"
-    ></span>
-    <el-empty v-else description=" " style="padding: 0px !important"></el-empty>
+    <el-empty description=" " style="padding: 0px !important"></el-empty>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElEmpty, ElImage, ElLink } from 'element-plus'
+import { ElEmpty, ElImage, ElLink, ElSkeleton, ElSkeletonItem } from 'element-plus'
 
 const props = defineProps<{
   url: string | null

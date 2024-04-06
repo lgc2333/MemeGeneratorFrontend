@@ -7,7 +7,7 @@
     </el-header>
     <el-scrollbar>
       <el-main>
-        <router-view class="m-auto max-w-5xl" />
+        <router-view class="m-auto max-w-4xl" />
       </el-main>
     </el-scrollbar>
   </el-container>

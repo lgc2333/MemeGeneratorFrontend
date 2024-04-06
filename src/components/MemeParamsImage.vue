@@ -1,48 +1,49 @@
 <template>
   <el-upload
     ref="elRef"
-    class="meme-form m-auto md:m-0"
+    v-model:file-list="model"
     action="#"
+    class="meme-upload-image"
     drag
-    :limit="1"
+    multiple
+    list-type="picture"
     :auto-upload="false"
-    list-type="picture-card"
-    :on-change="onChange"
+    :limit="limit"
     :on-exceed="onExceed"
     :on-preview="onPreview"
   >
-    <p class="i-carbon-add text-4xl" />
+    <el-icon class="text-32px!"><span class="i-carbon-cloud-upload" /></el-icon>
+    <div class="el-upload__text align-text-bottom">Drop file here or <em>click to upload</em></div>
   </el-upload>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElUpload, UploadFile, UploadInstance, UploadUserFile } from 'element-plus'
+import { ElIcon, ElMessage, ElUpload, UploadFile, UploadUserFile } from 'element-plus'
 
-defineProps<{
+const model = defineModel<UploadUserFile[]>({ required: true })
+const props = defineProps<{
+  limit: number
   onPreview: (file: UploadFile) => void
-  onChange: (file: UploadFile) => void
 }>()
 
-const elRef = ref<UploadInstance | null>(null)
-
-function onExceed(files: File[], uploadFiles: UploadUserFile[]) {
-  elRef.value!.handleRemove(uploadFiles[0] as any)
-  elRef.value!.handleStart(files[0] as any)
+function onExceed() {
+  ElMessage.warning(`Maximum number of images is ${props.limit}`)
 }
 </script>
 
 <style lang="scss">
 .meme-upload-image {
-  .el-upload--picture-card.is-drag {
-    border: none;
+  .el-upload {
+    height: 90px;
 
     .el-upload-dragger {
-      width: 100%;
       height: 100%;
+      padding: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
   }
 }

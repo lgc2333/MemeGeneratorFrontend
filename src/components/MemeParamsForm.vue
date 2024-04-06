@@ -1,37 +1,27 @@
 <template>
-  <el-form label-position="top">
-    <div class="grid lg:grid-cols-2 lg:gap-x-16px">
-      <template v-for="i in info.params.max_images" :key="`image${i}`">
-        <el-form-item
-          v-if="i == 1 || i <= info.params.min_images || model.images[i - 2]"
-          :label="`Image ${i}`"
-          :required="i <= info.params.min_images"
-          class="w-100% md:w-fit"
-        >
-          <meme-params-image
-            :on-change="(file) => (model.images[i - 1] = file)"
-            :on-remove="() => (model.images[i - 1] = null)"
-            :on-preview="handlePictureCardPreview"
-          />
-        </el-form-item>
-      </template>
+  <el-form label-position="top" class="meme-form flex gap-20px flex-col">
+    <div v-if="info.params.max_images">
+      <h2 class="mt-0">Images</h2>
+      <meme-params-image
+        v-model="model.images"
+        :limit="info.params.max_images"
+        :on-preview="handlePictureCardPreview"
+      />
     </div>
 
-    <div class="grid lg:grid-cols-2 lg:gap-x-16px">
-      <template v-for="i in info.params.max_texts" :key="`text${i}`">
-        <el-form-item
-          v-if="i == 1 || i <= info.params.min_texts || model.texts[i - 2]"
-          :label="`Text ${i}`"
-          :required="i <= info.params.min_texts"
-        >
-          <el-input v-model="model.texts[i - 1]" type="textarea" autosize />
-        </el-form-item>
-      </template>
+    <div v-if="info.params.max_texts" class="flex gap-10px flex-col">
+      <h2 class="mt-0">Texts</h2>
+      <el-form-item
+        v-for="index in Math.min(info.params.max_texts, model.texts.length + 1)"
+        :key="index"
+        :label="`Text ${index}`"
+        :required="index <= info.params.min_texts"
+      >
+        <el-input v-model="model.texts[index - 1]" type="textarea" autosize />
+      </el-form-item>
     </div>
 
-    <el-form-item>
-      <el-button type="primary" class="w-100%" @click="validateAndSubmit()"> Generate! </el-button>
-    </el-form-item>
+    <el-button type="primary" class="w-100%" @click="validateAndSubmit()">Generate!</el-button>
 
     <el-dialog v-model="imagePreviewVisible">
       <img class="w-100%" :src="imagePreviewImage" alt="Preview Image" />
@@ -52,7 +42,6 @@ import {
 } from 'element-plus'
 
 import MemeParamsImage from './MemeParamsImage.vue'
-
 import { MemeGenerateParams, MemeInfo } from '../utils/meme-api'
 
 const model = defineModel<MemeGenerateParams>({ required: true })
@@ -61,17 +50,14 @@ const props = defineProps<{ info: MemeInfo; handleGenerate: () => any }>()
 const imagePreviewVisible = ref(false)
 const imagePreviewImage = ref('')
 
+function arrangeArray<T>(arr: T[]) {
+  const arranged = arr.filter(Boolean)
+  arr.splice(0, arr.length, ...arranged)
+}
+
 watchEffect(() => {
-  const {
-    max_images: maxImages,
-    max_texts: maxTexts,
-    default_texts: defaultTexts,
-  } = props.info.params
-  model.value = {
-    images: new Array(maxImages).fill(null),
-    texts: [...defaultTexts, ...new Array(maxTexts - defaultTexts.length).fill('')],
-    args: {},
-  }
+  // arrangeArray(model.value.images)
+  arrangeArray(model.value.texts)
 })
 
 function handlePictureCardPreview(file: UploadFile) {
@@ -96,16 +82,8 @@ function validateAndSubmit() {
 
 <style lang="scss">
 .meme-form {
-  .el-upload--picture-card.is-drag {
-    border: none;
-
-    .el-upload-dragger {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  .el-form-item {
+    margin-bottom: 0;
   }
 }
 </style>

@@ -11,7 +11,9 @@
       :info="info"
       :handle-generate="generate"
     />
-    <el-text v-else type="info" class="text-center m-0"> No meme selected </el-text>
+    <div v-else>
+      <el-text type="info" class="text-center m-0">No meme selected</el-text>
+    </div>
   </div>
 </template>
 
@@ -31,11 +33,7 @@ const preview = ref<string | null>(null)
 
 let lastPreviewLoadSignal = new AbortController()
 
-const generateParams = ref<MemeGenerateParams>({
-  images: [],
-  texts: [],
-  args: {},
-})
+const generateParams = ref<MemeGenerateParams>({ images: [], texts: [], args: {} })
 
 async function loadInfo() {
   info.value = null
@@ -91,6 +89,7 @@ watch(selectedMemeKey, async (v) => {
     preview.value = null
     return
   }
+  generateParams.value = { images: [], texts: [], args: {} }
   await Promise.all([loadInfo(), loadPreview()])
 })
 </script>
