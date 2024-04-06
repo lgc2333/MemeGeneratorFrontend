@@ -1,15 +1,18 @@
 <template>
-  <el-form label-position="top" class="meme-form flex gap-20px flex-col">
+  <el-form label-position="top" class="meme-form">
     <div v-if="info.params.max_images">
       <h2 class="mt-0">Images</h2>
-      <meme-params-image
-        v-model="model.images"
-        :limit="info.params.max_images"
-        :on-preview="handlePictureCardPreview"
-      />
+      <el-form-item>
+        <meme-params-image
+          v-model="model.images"
+          class="w-100%"
+          :limit="info.params.max_images"
+          :on-preview="handlePictureCardPreview"
+        />
+      </el-form-item>
     </div>
 
-    <div v-if="info.params.max_texts" class="flex gap-10px flex-col">
+    <div v-if="info.params.max_texts">
       <h2 class="mt-0">Texts</h2>
       <el-form-item
         v-for="index in Math.min(info.params.max_texts, model.texts.length + 1)"
@@ -79,11 +82,3 @@ function validateAndSubmit() {
   props.handleGenerate()
 }
 </script>
-
-<style lang="scss">
-.meme-form {
-  .el-form-item {
-    margin-bottom: 0;
-  }
-}
-</style>
